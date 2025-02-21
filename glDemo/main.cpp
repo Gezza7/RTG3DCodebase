@@ -41,6 +41,9 @@ vec3 g_beastPos = vec3(2.0f, 0.0f, 0.0f);
 float g_beastRotation = 0.0f;
 AIMesh* g_planetMesh = nullptr;
 
+AIMesh* g_duck = nullptr;
+vec3 g_duckPos = vec3(2.0, 2.0, 2.0);
+
 int g_showing = 0;
 int g_NumExamples = 3;
 
@@ -149,6 +152,12 @@ int main()
 		g_planetMesh->addTexture(string("Assets\\Textures\\Hodges_G_MountainRock1.jpg"), FIF_JPEG);
 	}
 
+	g_duck = new AIMesh(string("Assets\\duck\\rubber_duck_toy_4k.obj"));
+	if (g_duck)
+	{
+		g_duck->addTexture(string("Assets\\duck\\rubber_duck_toy_diff_4k.jpg"), FIF_JPEG);
+	}
+
 	//
 	//Set up Scene class
 	//
@@ -209,6 +218,7 @@ void renderScene()
 	if (true)
 	{
 		// Render axes 
+		
 		glUseProgram(g_flatColourShader);
 		GLint pLocation;
 		Helper::SetUniformLocation(g_flatColourShader, "viewMatrix", &pLocation);
@@ -262,12 +272,23 @@ void renderScene()
 			g_planetMesh->setupTextures();
 			g_planetMesh->render();
 		}
+
+		if (g_duck)
+		{
+			Helper::SetUniformLocation(g_texDirLightShader, "modelMatrix", &pLocation);
+			mat4 modelTransform = glm::translate(identity<mat4>(), g_duckPos);
+			glUniformMatrix4fv(pLocation, 1, GL_FALSE, (GLfloat*)&modelTransform);
+
+			g_duck->setupTextures();
+			g_duck->render();
+		}
 	}
 	break;
 
 	case 1:
 	{
 		// Render cube 
+		
 		glUseProgram(g_flatColourShader);
 		GLint pLocation;
 		Helper::SetUniformLocation(g_flatColourShader, "viewMatrix", &pLocation);
@@ -282,6 +303,7 @@ void renderScene()
 		break;
 	}
 	case 2:
+		
 		g_Scene->Render();
 	}
 
@@ -310,11 +332,21 @@ void updateScene()
 // Function to call when window resized
 void resizeWindow(GLFWwindow* _window, int _width, int _height)
 {
+
 	if (g_mainCamera) {
 
 		g_mainCamera->setAspect((float)_width / (float)_height);
 	}
-
+	/*
+	else 
+	{
+		Camera* cam = g_Scene->GetCamera("CAM3");
+		if (cam)
+		{
+			
+		}
+	}
+	*/
 	glViewport(0, 0, _width, _height);		// Draw into entire window
 }
 
