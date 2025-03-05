@@ -158,6 +158,8 @@ void Scene::Render()
 
 			//actually render the GameObject
 			(*it)->Render();
+
+			
 		}
 	}
 
@@ -309,6 +311,8 @@ void Scene::Load(ifstream& _file)
 
 void Scene::Init()
 {
+	//initial aspect ratio
+	m_aspectRatio = 1.0f;
 	//initialise all cameras
 	//scene is passed down here to allow for linking of cameras to game objects
 	int count = 0;
@@ -338,4 +342,15 @@ void Scene::Init()
 	{
 		(*it)->Init(this);
 	}
+
+	//initialy set the camera aspect ratio
+	m_useCamera->setAspectRatio(m_aspectRatio);
+}
+
+
+void Scene::setAspectRatio(float m_newAspectRatio)
+{
+	//when the sapect ratio is changed this function is called to change the aspect ratio variable in the camera class
+	
+	m_useCamera->setAspectRatio(m_newAspectRatio);
 }

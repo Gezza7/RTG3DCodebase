@@ -337,16 +337,13 @@ void resizeWindow(GLFWwindow* _window, int _width, int _height)
 
 		g_mainCamera->setAspect((float)_width / (float)_height);
 	}
-	/*
-	else 
+	//if the scene has been initialised then change the aspect ratio
+	if (g_Scene)
 	{
-		Camera* cam = g_Scene->GetCamera("CAM3");
-		if (cam)
-		{
-			
-		}
+		//gets the current camera in scene and changes the aspect ratio 
+		g_Scene->setAspectRatio((float)_width / (float)_height);
 	}
-	*/
+	
 	glViewport(0, 0, _width, _height);		// Draw into entire window
 }
 
