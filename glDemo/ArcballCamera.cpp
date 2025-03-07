@@ -1,5 +1,6 @@
 
 #include "ArcballCamera.h"
+#include "stringHelp.h"
 
 using namespace std;
 using namespace glm;
@@ -50,6 +51,7 @@ ArcballCamera::ArcballCamera() {
 	calculateDerivedValues();
 	//F.calculateWorldCoordPlanes(C, R);
 }
+
 
 
 // create a camera with orientation <theta, phi> representing Euler angles specified in degrees and Euclidean distance 'init_radius' from the origin.  The frustum / viewplane projection coefficients are defined in init_fovy, specified in degrees spanning the entire vertical field of view angle, init_aspect (w/h ratio), init_nearPlane and init_farPlane.  If init_farPlane = 0.0 (as determined by equalf) then the resulting frustum represents an infinite perspective projection.  This is the default
@@ -155,6 +157,31 @@ void ArcballCamera::setFarPlaneDistance(float _farPlaneDistance) {
 	calculateDerivedValues();
 }
 
+
+void ArcballCamera::Load(ifstream& _file)  
+{
+	
+
+	//F = ViewFrustum(init_fovy, init_aspect, init_nearPlane, init_farPlane);
+
+	// calculate derived values
+	//calculateDerivedValues();
+	//F.calculateWorldCoordPlanes(C, R);
+
+
+	//StringHelp::String(_file, "NAME", m_name);
+	//StringHelp::Float3(_file, "POS", m_pos.x, m_pos.y, m_pos.z);
+	//StringHelp::Float3(_file, "LOOKAT", m_lookAt.x, m_lookAt.y, m_lookAt.z);
+	StringHelp::Float(_file, "THETA", m_theta);
+	StringHelp::Float(_file, "PHI", m_phi);
+	StringHelp::Float(_file, "RADIUS", m_radius);
+	StringHelp::Float(_file, "FOV", m_fovY);
+	StringHelp::Float(_file, "NEAR", m_nearPlane);
+	StringHelp::Float(_file, "FAR", m_farPlane);
+	m_aspect = 1.0f;
+	calculateDerivedValues();
+}
+
 #pragma endregion
 
 
@@ -183,5 +210,6 @@ glm::mat4 ArcballCamera::projectionTransform() {
 
 	return m_projectionMatrix;
 }
+
 
 #pragma endregion

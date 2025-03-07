@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "CameraFactory.h"
 #include "Camera.h"
+#include "ArcballCamera.h"
 #include "LightFactory.h"
 #include "Light.h"
 #include "ModelFactory.h"
@@ -146,6 +147,8 @@ void Scene::Render()
 			//set shader program using
 			GLuint SP = (*it)->GetShaderProg();
 			glUseProgram(SP);
+
+			//maybe use the m_useCameraIndex to switch between a useCamera and a UseArcballCamera to keep seperate lists ???
 
 			//set up for uniform shader values for current camera
 			m_useCamera->SetRenderValues(SP);
@@ -344,7 +347,11 @@ void Scene::Init()
 	}
 
 	//initialy set the camera aspect ratio
-	m_useCamera->setAspectRatio(m_aspectRatio);
+	//m_useCamera->setAspectRatio(m_aspectRatio);
+	for (list<Camera*>::iterator it = m_Cameras.begin(); it != m_Cameras.end();it++)
+	{
+		(*it)->setAspectRatio(m_aspectRatio);
+	}
 }
 
 
@@ -352,5 +359,30 @@ void Scene::setAspectRatio(float m_newAspectRatio)
 {
 	//when the sapect ratio is changed this function is called to change the aspect ratio variable in the camera class
 	
-	m_useCamera->setAspectRatio(m_newAspectRatio);
+	//m_useCamera->setAspectRatio(m_newAspectRatio);
+	int count = 0;
+	for (list<Camera*>::iterator it = m_Cameras.begin(); it != m_Cameras.end();it++) 
+	{
+		if (count <4)
+		{
+			(*it)->setAspectRatio(m_newAspectRatio);
+		}
+		count++;
+	}
+}
+
+void Scene::itterateCamera()
+{
+	m_useCameraIndex++;
+	m_useCameraIndex %= m_Cameras.size();
+	int count = 0;
+	for (list<Camera*>::iterator it = m_Cameras.begin(); it != m_Cameras.end(); it++)
+	{
+		if (m_useCameraIndex == count)
+		{
+			m_useCamera = *it;
+			printf("Current use camera : camera %d\n", m_useCameraIndex);
+		}
+		count++;
+	}
 }

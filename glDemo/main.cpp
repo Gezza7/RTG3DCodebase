@@ -363,7 +363,10 @@ void keyboardHandler(GLFWwindow* _window, int _key, int _scancode, int _action, 
 		case GLFW_KEY_SPACE:
 			g_showing++;
 			g_showing = g_showing % g_NumExamples;
-
+			break;
+		case GLFW_KEY_W:
+			g_Scene->itterateCamera();
+			break;
 		default:
 		{
 		}

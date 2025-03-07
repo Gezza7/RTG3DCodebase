@@ -49,6 +49,8 @@ public:
 	void setAspectRatio(float m_newAsRatio);
 	float m_aspectRatio;
 
+	void itterateCamera();
+
 protected:
 
 	//data structures containing pointers to all our stuff
