@@ -367,6 +367,9 @@ void keyboardHandler(GLFWwindow* _window, int _key, int _scancode, int _action, 
 		case GLFW_KEY_W:
 			g_Scene->itterateCamera();
 			break;
+		case GLFW_KEY_B:
+			printf("");
+			break;
 		default:
 		{
 		}
@@ -399,6 +402,19 @@ void mouseMoveHandler(GLFWwindow* _window, double _xpos, double _ypos)
 
 		g_prevMouseX = _xpos;
 		g_prevMouseY = _ypos;
+		 
+		ArcballCamera* arcballCam = dynamic_cast<ArcballCamera*>(g_Scene->GetCamera("CAM5")); 
+		if (arcballCam)
+		{
+			float dx = float(_xpos - g_prevMouseX);// *360.0f * tDelta;
+			float dy = float(_ypos - g_prevMouseY);// *360.0f * tDelta;
+
+			
+				arcballCam->rotateCamera(-dy, -dx); 
+
+			g_prevMouseX = _xpos;
+			g_prevMouseY = _ypos;
+		}
 	}
 }
 
@@ -426,6 +442,15 @@ void mouseScrollHandler(GLFWwindow* _window, double _xoffset, double _yoffset) {
 			g_mainCamera->scaleRadius(1.1f);
 		else if (_yoffset > 0.0)
 			g_mainCamera->scaleRadius(0.9f);
+	}
+	
+	ArcballCamera* arcballCam = dynamic_cast<ArcballCamera*>(g_Scene->GetCamera("CAM5"));
+	if (arcballCam)
+	{
+		if (_yoffset < 0.0)
+			arcballCam->scaleRadius(1.1f);
+		else if (_yoffset > 0.0)
+			arcballCam->scaleRadius(0.9f);
 	}
 }
 

@@ -1,6 +1,7 @@
 
 #include "ArcballCamera.h"
 #include "stringHelp.h"
+#include "helper.h"
 
 using namespace std;
 using namespace glm;
@@ -50,6 +51,7 @@ ArcballCamera::ArcballCamera() {
 	// calculate derived values
 	calculateDerivedValues();
 	//F.calculateWorldCoordPlanes(C, R);
+	
 }
 
 
@@ -158,30 +160,47 @@ void ArcballCamera::setFarPlaneDistance(float _farPlaneDistance) {
 }
 
 
-void ArcballCamera::Load(ifstream& _file)  
+void ArcballCamera::loadArcball(ifstream& _file)  
 {
-	
-
-	//F = ViewFrustum(init_fovy, init_aspect, init_nearPlane, init_farPlane);
-
-	// calculate derived values
-	//calculateDerivedValues();
-	//F.calculateWorldCoordPlanes(C, R);
-
+	//some valuse setup by base class camera
 
 	//StringHelp::String(_file, "NAME", m_name);
 	//StringHelp::Float3(_file, "POS", m_pos.x, m_pos.y, m_pos.z);
 	//StringHelp::Float3(_file, "LOOKAT", m_lookAt.x, m_lookAt.y, m_lookAt.z);
+	
+	//StringHelp::Float(_file, "FOV", m_fovY);
+	//StringHelp::Float(_file, "NEAR", m_nearPlane);
+	//StringHelp::Float(_file, "FAR", m_farPlane);
+
+	//values setup by arcballCamera
 	StringHelp::Float(_file, "THETA", m_theta);
 	StringHelp::Float(_file, "PHI", m_phi);
 	StringHelp::Float(_file, "RADIUS", m_radius);
-	StringHelp::Float(_file, "FOV", m_fovY);
-	StringHelp::Float(_file, "NEAR", m_nearPlane);
-	StringHelp::Float(_file, "FAR", m_farPlane);
 	m_aspect = 1.0f;
 	calculateDerivedValues();
 }
 
+void ArcballCamera::setRenderValuesArcballCamera(unsigned int _prog)
+{
+	
+	
+	mat4 cameraView = m_viewMatrix * translate(identity<mat4>(), -_beastPos); 
+	
+	GLint loc;
+	//matrix for the view transform
+	if (Helper::SetUniformLocation(_prog, "viewMatrix", &loc))
+		glUniformMatrix4fv(loc, 1, GL_FALSE, (GLfloat*)&cameraView);
+
+	//matrix for the projection transform
+	if (Helper::SetUniformLocation(_prog, "projMatrix", &loc))
+		glUniformMatrix4fv(loc, 1, GL_FALSE, (GLfloat*)&(m_projectionMatrix));
+
+	//the current camera is at this position
+	if (Helper::SetUniformLocation(_prog, "camPos", &loc))
+		glUniform3fv(loc, 1, glm::value_ptr(GetPos()));
+	
+
+}
 #pragma endregion
 
 
@@ -210,6 +229,7 @@ glm::mat4 ArcballCamera::projectionTransform() {
 
 	return m_projectionMatrix;
 }
+
 
 
 #pragma endregion

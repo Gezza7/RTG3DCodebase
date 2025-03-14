@@ -39,8 +39,9 @@ private:
 
 	// update position, orientation, view and projection matrices when camera rotation and radius are modified
 	void calculateDerivedValues();
+	
 
-public:
+public:  
 
 	// Constructors
 
@@ -86,7 +87,9 @@ public:
 
 	void setFarPlaneDistance(float _farPlaneDistance);
 
-	void Load(ifstream& _file);
+	void loadArcball(ifstream& _file);
+
+	void setRenderValuesArcballCamera(unsigned int _prog);
 	
 	
 	// Accessor methods for derived values
@@ -98,5 +101,5 @@ public:
 	glm::mat4 viewTransform(); // return a const reference to the view transform matrix for the camera
 
 	glm::mat4 projectionTransform(); // return a const reference the projection transform for the camera.  This is a pass-through method and calls projectionMatrix on the encapsulated ViewFrustum
-
+	glm::vec3 _beastPos;
 };

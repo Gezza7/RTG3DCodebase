@@ -148,13 +148,20 @@ void Scene::Render()
 			GLuint SP = (*it)->GetShaderProg();
 			glUseProgram(SP);
 
-			//maybe use the m_useCameraIndex to switch between a useCamera and a UseArcballCamera to keep seperate lists ???
 
 			//set up for uniform shader values for current camera
 			ArcballCamera* arcballCam = dynamic_cast<ArcballCamera*>(m_useCamera);
 			if (arcballCam == nullptr)
 			{
 				m_useCamera->SetRenderValues(SP); 
+			}
+			else
+			{
+				if ((*it)->GetName() == "BEAST")
+				{
+					arcballCam->_beastPos = (*it)->getPos();
+				}
+				arcballCam->setRenderValuesArcballCamera(SP); 
 			}
 			
 
@@ -205,6 +212,7 @@ void Scene::Load(ifstream& _file)
 		if (abCam)
 		{
 			abCam->Load(_file); 
+			abCam->loadArcball(_file);
 		}
 		else
 		{

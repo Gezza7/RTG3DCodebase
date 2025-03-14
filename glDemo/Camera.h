@@ -62,6 +62,8 @@ public:
 
 	void setAspectRatio(float m_newAspectRatio); 
 
+	glm::vec3 getPos();
+
 protected:
 
 	//standard transforms needed to render with this a basic camera

@@ -52,3 +52,8 @@ void GameObject::Init(Scene* _scene)
 {
 	//I have nothing to link up to
 }
+
+vec3 GameObject::getPos()
+{
+	return m_pos;
+}
