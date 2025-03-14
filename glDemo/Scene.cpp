@@ -140,7 +140,7 @@ void Scene::Render()
 {
 	//TODO: Set up for the Opaque Render Pass will go here
 	//check out the example stuff back in main.cpp to see what needs setting up here
-	for (list<GameObject*>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
+	for (list<GameObject*>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++) 
 	{
 		if ((*it)->GetRP() & RP_OPAQUE)// TODO: note the bit-wise operation. Why?
 		{
@@ -151,7 +151,12 @@ void Scene::Render()
 			//maybe use the m_useCameraIndex to switch between a useCamera and a UseArcballCamera to keep seperate lists ???
 
 			//set up for uniform shader values for current camera
-			m_useCamera->SetRenderValues(SP);
+			ArcballCamera* arcballCam = dynamic_cast<ArcballCamera*>(m_useCamera);
+			if (arcballCam == nullptr)
+			{
+				m_useCamera->SetRenderValues(SP); 
+			}
+			
 
 			//loop through setting up uniform shader values for anything else
 			SetShaderUniforms(SP);
@@ -195,8 +200,18 @@ void Scene::Load(ifstream& _file)
 		string type;
 		_file >> dummy >> type; _file.ignore(256, '\n');
 		Camera* newCam = CameraFactory::makeNewCam(type);
-		newCam->Load(_file);
 
+		ArcballCamera* abCam = dynamic_cast<ArcballCamera*>(newCam);
+		if (abCam)
+		{
+			abCam->Load(_file); 
+		}
+		else
+		{
+			newCam->Load(_file);
+		}
+		
+		
 		m_Cameras.push_back(newCam);
 
 		//skip }
@@ -350,12 +365,21 @@ void Scene::Init()
 	//m_useCamera->setAspectRatio(m_aspectRatio);
 	for (list<Camera*>::iterator it = m_Cameras.begin(); it != m_Cameras.end();it++)
 	{
-		(*it)->setAspectRatio(m_aspectRatio);
+		//(*it)->setAspectRatio(m_aspectRatio);
+		ArcballCamera* abCam = dynamic_cast<ArcballCamera*>(*it); 
+		if (abCam) 
+		{
+			abCam->setAspect(m_aspectRatio); 
+		}
+		else
+		{
+			(*it)->setAspectRatio(m_aspectRatio); 
+		}
 	}
 }
 
 
-void Scene::setAspectRatio(float m_newAspectRatio)
+void Scene::setAspectRatio(float m_newAspectRatio)		//use dynamic_cast to cast *it to a ArcballCamera then call the function to change aspect ratio :3
 {
 	//when the sapect ratio is changed this function is called to change the aspect ratio variable in the camera class
 	
@@ -363,11 +387,22 @@ void Scene::setAspectRatio(float m_newAspectRatio)
 	int count = 0;
 	for (list<Camera*>::iterator it = m_Cameras.begin(); it != m_Cameras.end();it++) 
 	{
+		/*
 		if (count <4)
 		{
 			(*it)->setAspectRatio(m_newAspectRatio);
 		}
 		count++;
+		*/
+		ArcballCamera* abCam = dynamic_cast<ArcballCamera*>(*it); 
+		if (abCam) 
+		{
+			abCam->setAspect(m_newAspectRatio);
+		}
+		else
+		{
+			(*it)->setAspectRatio(m_newAspectRatio); 
+		}
 	}
 }
 
