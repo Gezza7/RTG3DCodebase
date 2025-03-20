@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include "Cube.h"
 
 using namespace std;
 
@@ -71,5 +72,8 @@ protected:
 	int m_useCameraIndex = 0;
 	//TODO: pass down the same keyboard input from main so that we skip through all the cameras
 	
+
+	//cube
+	Cube* s_cube = nullptr;
 };
 

@@ -11,6 +11,7 @@
 #include "Shader.h"
 #include "GameObjectFactory.h"
 #include <assert.h>
+#include "Cube.h"
 
 Scene::Scene()
 {
@@ -177,7 +178,7 @@ void Scene::Render()
 			
 		}
 	}
-
+	s_cube->render();
 	//TODO: now do the same for RP_TRANSPARENT here
 }
 
@@ -384,6 +385,10 @@ void Scene::Init()
 			(*it)->setAspectRatio(m_aspectRatio); 
 		}
 	}
+
+
+	//create cube to render
+	s_cube = new Cube();
 }
 
 

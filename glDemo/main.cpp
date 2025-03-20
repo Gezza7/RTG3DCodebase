@@ -400,9 +400,8 @@ void mouseMoveHandler(GLFWwindow* _window, double _xpos, double _ypos)
 		if (g_mainCamera)
 			g_mainCamera->rotateCamera(-dy, -dx);
 
-		g_prevMouseX = _xpos;
-		g_prevMouseY = _ypos;
-		 
+		
+		 //also moves the arcballCamera in scene
 		ArcballCamera* arcballCam = dynamic_cast<ArcballCamera*>(g_Scene->GetCamera("CAM5")); 
 		if (arcballCam)
 		{
@@ -412,9 +411,11 @@ void mouseMoveHandler(GLFWwindow* _window, double _xpos, double _ypos)
 			
 				arcballCam->rotateCamera(-dy, -dx); 
 
-			g_prevMouseX = _xpos;
-			g_prevMouseY = _ypos;
+			
 		}
+
+		g_prevMouseX = _xpos;
+		g_prevMouseY = _ypos;
 	}
 }
 
