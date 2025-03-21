@@ -11,7 +11,7 @@
 #include "Shader.h"
 #include "GameObjectFactory.h"
 #include <assert.h>
-#include "Cube.h"
+#include "Cube2.h"
 
 Scene::Scene()
 {
@@ -41,8 +41,18 @@ void Scene::Update(float _dt)
 	//update all GameObjects
 	for (list<GameObject*>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
 	{
-		(*it)->Tick(_dt);
+		Cube2* cube = dynamic_cast<Cube2*>(*it);
+		if (cube)
+		{
+			cube->tick(_dt);
+		}
+		else
+		{
+			(*it)->Tick(_dt);
+		}
+		
 	}
+	m_useCamera->move(camW, camS, camA, camD, _dt);
 }
 
 void Scene::AddGameObject(GameObject* _new)
@@ -145,6 +155,9 @@ void Scene::Render()
 	{
 		if ((*it)->GetRP() & RP_OPAQUE)// TODO: note the bit-wise operation. Why?
 		{
+
+			
+			
 			//set shader program using
 			GLuint SP = (*it)->GetShaderProg();
 			glUseProgram(SP);
@@ -154,7 +167,7 @@ void Scene::Render()
 			ArcballCamera* arcballCam = dynamic_cast<ArcballCamera*>(m_useCamera);
 			if (arcballCam == nullptr)
 			{
-				m_useCamera->SetRenderValues(SP); 
+				m_useCamera->SetRenderValues(SP);
 			}
 			else
 			{
@@ -162,23 +175,34 @@ void Scene::Render()
 				{
 					arcballCam->_beastPos = (*it)->getPos();
 				}
-				arcballCam->setRenderValuesArcballCamera(SP); 
+				arcballCam->setRenderValuesArcballCamera(SP);
 			}
-			
+
 
 			//loop through setting up uniform shader values for anything else
 			SetShaderUniforms(SP);
 
-			//set any uniform shader values for the actual model
-			(*it)->PreRender();
 
-			//actually render the GameObject
-			(*it)->Render();
+			
+			Cube2* cube = dynamic_cast<Cube2*>(*it); 
+			if (cube)
+			{
+				cube->preRender();
+				cube->render();
+			}
+			else
+			{
 
+				//set any uniform shader values for the actual model
+				(*it)->PreRender();
+				//actually render the GameObject
+				(*it)->Render();
+			}
+			
 			
 		}
 	}
-	s_cube->render();
+	//s_cube->render();
 	//TODO: now do the same for RP_TRANSPARENT here
 }
 
@@ -387,8 +411,7 @@ void Scene::Init()
 	}
 
 
-	//create cube to render
-	s_cube = new Cube();
+	camW, camS, camA, camD = false;
 }
 
 

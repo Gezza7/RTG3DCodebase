@@ -364,11 +364,23 @@ void keyboardHandler(GLFWwindow* _window, int _key, int _scancode, int _action, 
 			g_showing++;
 			g_showing = g_showing % g_NumExamples;
 			break;
-		case GLFW_KEY_W:
+		case GLFW_KEY_E:
 			g_Scene->itterateCamera();
 			break;
 		case GLFW_KEY_B:
 			printf("");
+			break;
+		case GLFW_KEY_W:
+			g_Scene->camW = true;
+			break;
+		case GLFW_KEY_S:
+			g_Scene->camS = true;
+			break;
+		case GLFW_KEY_A:
+			g_Scene->camA = true;
+			break;
+		case GLFW_KEY_D:
+			g_Scene->camD = true;
 			break;
 		default:
 		{
@@ -380,6 +392,18 @@ void keyboardHandler(GLFWwindow* _window, int _key, int _scancode, int _action, 
 		// handle key release events
 		switch (_key)
 		{
+		case GLFW_KEY_W: 
+			g_Scene->camW = false;
+			break;
+		case GLFW_KEY_S:
+			g_Scene->camS = false;
+			break;
+		case GLFW_KEY_A:
+			g_Scene->camA = false;
+			break;
+		case GLFW_KEY_D:
+			g_Scene->camD = false;
+			break;
 		default:
 		{
 		}

@@ -19,7 +19,6 @@ void ExampleGO::Load(ifstream& _file)
 	StringHelp::String(_file, "MODEL", m_ModelName);
 	StringHelp::String(_file, "TEXTURE", m_TexName);
 	StringHelp::String(_file, "SHADER", m_ShaderName);
-
 }
 
 void ExampleGO::Tick(float _dt)

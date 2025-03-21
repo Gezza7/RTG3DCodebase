@@ -78,6 +78,27 @@ void Camera::setAspectRatio(float ar)
 	m_aspectRatio = ar;
 }
 
+void Camera::move(bool w, bool s, bool a, bool d, float _dt)
+{
+	if (w)
+	{
+		m_pos = glm::vec3(m_pos.x -(10*_dt), m_pos.y, m_pos.z);
+		
+	}
+	if (s)
+	{
+
+	}
+	if (a)
+	{
+
+	}
+	if (d)
+	{
+
+	}
+}
+
 glm::vec3 Camera::getPos()
 {
 	return m_pos;
