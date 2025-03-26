@@ -102,4 +102,5 @@ public:
 
 	glm::mat4 projectionTransform(); // return a const reference the projection transform for the camera.  This is a pass-through method and calls projectionMatrix on the encapsulated ViewFrustum
 	glm::vec3 _beastPos;
+	glm::vec3 _pos;
 };

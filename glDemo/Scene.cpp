@@ -173,7 +173,8 @@ void Scene::Render()
 			{
 				if ((*it)->GetName() == "BEAST")
 				{
-					arcballCam->_beastPos = (*it)->getPos();
+					//arcballCam->_beastPos = (*it)->getPos();
+					arcballCam->_pos = m_useCamera->GetPos();
 				}
 				arcballCam->setRenderValuesArcballCamera(SP);
 			}

@@ -25,6 +25,8 @@ void ArcballCamera::calculateDerivedValues() {
 	// calculate view and projection transform matrices
 	m_viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -m_radius)) * glm::eulerAngleX(-theta_) * glm::eulerAngleY(-phi_);
 	m_projectionMatrix = glm::perspective(glm::radians<float>(m_fovY), m_aspect, m_nearPlane, m_farPlane);
+	//theta and phi used to rotate camera and calculate the viewmatrix use these to change the camera position as well so it will move based on where it is looking not the cardinal axies
+	//add button to make camera look at other gameobjects
 }
 
 
@@ -184,7 +186,7 @@ void ArcballCamera::setRenderValuesArcballCamera(unsigned int _prog)
 {
 	
 	
-	mat4 cameraView = m_viewMatrix * translate(identity<mat4>(), -_beastPos); 
+	mat4 cameraView = m_viewMatrix * translate(identity<mat4>(), _pos); 
 	
 	GLint loc;
 	//matrix for the view transform

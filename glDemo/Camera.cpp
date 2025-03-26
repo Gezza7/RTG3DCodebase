@@ -82,20 +82,19 @@ void Camera::move(bool w, bool s, bool a, bool d, float _dt)
 {
 	if (w)
 	{
-		m_pos = glm::vec3(m_pos.x -(10*_dt), m_pos.y, m_pos.z);
-		
+		m_pos = glm::vec3(m_pos.x, m_pos.y, m_pos.z - (10 * _dt));
 	}
 	if (s)
 	{
-
+		m_pos = glm::vec3(m_pos.x, m_pos.y, m_pos.z + (10 * _dt));
 	}
 	if (a)
 	{
-
+		m_pos = glm::vec3(m_pos.x - (10 * _dt), m_pos.y, m_pos.z);
 	}
 	if (d)
 	{
-
+		m_pos = glm::vec3(m_pos.x + (10 * _dt), m_pos.y, m_pos.z);
 	}
 }
 
