@@ -458,3 +458,20 @@ void Scene::itterateCamera()
 		count++;
 	}
 }
+
+void Scene::iterateLookAt()
+{
+	int count = 0;
+	m_lookAtIndex++;
+	m_lookAtIndex %= m_GameObjects.size();
+
+	for (list<GameObject*>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
+	{
+		if (m_lookAtIndex == count)
+		{
+			m_useCamera->setLookAt((*it)->getPos());
+		}
+		count++;
+	}
+
+}

@@ -64,6 +64,7 @@ public:
 
 	glm::vec3 getPos();
 	void move(bool w, bool s, bool a, bool d, float _dt);
+	void setLookAt(glm::vec3 look);
 
 protected:
 
@@ -85,6 +86,6 @@ protected:
 	string m_type;
 
 	float m_aspectRatio;
-	void setLookAt(glm::vec3 look);
+	
 };
 

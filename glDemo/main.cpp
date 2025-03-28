@@ -382,6 +382,9 @@ void keyboardHandler(GLFWwindow* _window, int _key, int _scancode, int _action, 
 		case GLFW_KEY_D:
 			g_Scene->camD = true;
 			break;
+		case GLFW_KEY_Q:
+			g_Scene->iterateLookAt();
+			break;
 		default:
 		{
 		}
