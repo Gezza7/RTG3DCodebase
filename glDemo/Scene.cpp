@@ -36,6 +36,16 @@ void Scene::Update(float _dt)
 	for (list<Camera*>::iterator it = m_Cameras.begin(); it != m_Cameras.end(); it++)
 	{
 		(*it)->Tick(_dt);
+		ArcballCamera* arcball = dynamic_cast<ArcballCamera*>(*it);
+		if (arcball)
+		{
+			arcball->move(camW, camS, camA, camD, _dt);
+		}
+		else
+		{
+			(*it)->move(camW, camS, camA, camD, _dt); 
+		}
+		
 	}
 
 	//update all GameObjects
@@ -52,7 +62,7 @@ void Scene::Update(float _dt)
 		}
 		
 	}
-	m_useCamera->move(camW, camS, camA, camD, _dt);
+	
 }
 
 void Scene::AddGameObject(GameObject* _new)
@@ -470,6 +480,16 @@ void Scene::iterateLookAt()
 		if (m_lookAtIndex == count)
 		{
 			m_useCamera->setLookAt((*it)->getPos());
+			
+			ArcballCamera* arcball = dynamic_cast<ArcballCamera*>(m_useCamera);
+			if (arcball)
+			{
+				arcball->setLookAt((*it)->getPos());
+				printf("looking at GameObject %d\n", m_lookAtIndex);
+
+
+			}
+			
 		}
 		count++;
 	}

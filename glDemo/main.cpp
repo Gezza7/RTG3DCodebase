@@ -215,6 +215,7 @@ void renderScene()
 	mat4 cameraView = g_mainCamera->viewTransform() * translate(identity<mat4>(), -g_beastPos);
 
 #// Render principle axes - no modelling transforms so just use cameraTransform
+	/*
 	if (true)
 	{
 		// Render axes 
@@ -304,9 +305,10 @@ void renderScene()
 	}
 	case 2:
 		
-		g_Scene->Render();
+		
 	}
-
+	*/
+	g_Scene->Render();
 }
 
 

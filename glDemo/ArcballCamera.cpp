@@ -17,13 +17,17 @@ void ArcballCamera::calculateDerivedValues() {
 	const float phi_ = glm::radians<float>(m_phi);
 
 	// calculate position vector
-	//cameraPos = glm::vec4(sinf(phi_) * cosf(-theta_) * radius, sinf(-theta_) * radius, cosf(phi_) * cosf(-theta_) * radius, 1.0f);
+	//_pos = glm::vec4(sinf(phi_) * cosf(-theta_) * m_radius, sinf(-theta_) * m_radius, cosf(phi_) * cosf(-theta_) * m_radius, 1.0f);
 
 	// calculate orientation basis R
 	//R = glm::eulerAngleY(phi_) * glm::eulerAngleX(theta_);
 		
 	// calculate view and projection transform matrices
-	m_viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -m_radius)) * glm::eulerAngleX(-theta_) * glm::eulerAngleY(-phi_);
+	//m_viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0,-m_radius)) * glm::eulerAngleX(-theta_) * glm::eulerAngleY(-phi_);
+	vec3 camPos = glm::vec3(-m_phi, - m_theta, m_radius);// 
+	//camPos = camPos * glm::eulerAngleX(-theta_);//*glm::eulerAngleY(-phi_);
+
+	m_viewMatrix = glm::lookAt(camPos, lookAt, vec3(0, 1, 0));
 	m_projectionMatrix = glm::perspective(glm::radians<float>(m_fovY), m_aspect, m_nearPlane, m_farPlane);
 	//theta and phi used to rotate camera and calculate the viewmatrix use these to change the camera position as well so it will move based on where it is looking not the cardinal axies
 	//add button to make camera look at other gameobjects
@@ -230,6 +234,37 @@ glm::mat4 ArcballCamera::viewTransform() {
 glm::mat4 ArcballCamera::projectionTransform() {
 
 	return m_projectionMatrix;
+}
+
+void ArcballCamera::setLookAt(glm::vec3 newLookAt)
+{
+	lookAt = newLookAt;
+	calculateDerivedValues();
+	//m_theta = m_theta;
+	//m_phi = m_phi;
+}
+
+void ArcballCamera::move(bool w, bool s, bool a, bool d, float _dt)
+{
+	if (w)
+	{
+		m_pos = glm::vec3(m_pos.x +(1 * (sinf(m_phi) * cosf(-m_theta) * m_radius) *_dt), m_pos.y - (1 * _dt) * sinf(-m_theta)*m_radius, m_pos.z + (1 * _dt)*cosf(m_phi)*cosf(-m_theta)*m_radius);
+	}
+	if (s)
+	{
+		m_pos = glm::vec3(m_pos.x, m_pos.y + (0.1 * _dt) * m_theta, m_pos.z - (10 * _dt));
+	}
+	if (a)
+	{
+		m_pos = glm::vec3(m_pos.x - (10 * _dt), m_pos.y, m_pos.z);
+	}
+	if (d)
+	{
+		m_pos = glm::vec3(m_pos.x + (10 * _dt), m_pos.y, m_pos.z);
+	}
+
+	//theta is Y 
+	//phi is X
 }
 
 
