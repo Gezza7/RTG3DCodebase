@@ -55,6 +55,7 @@ public:
 	bool camS;
 	bool camA;
 	bool camD;
+	void iterateLookAt();
 
 protected:
 
@@ -79,5 +80,8 @@ protected:
 
 	//cube
 	Cube* s_cube = nullptr;
+
+	//look at count
+	int m_lookAtIndex = 0;
 };
 

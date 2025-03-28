@@ -85,5 +85,6 @@ protected:
 	string m_type;
 
 	float m_aspectRatio;
+	void setLookAt(glm::vec3 look);
 };
 

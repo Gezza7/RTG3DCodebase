@@ -102,3 +102,8 @@ glm::vec3 Camera::getPos()
 {
 	return m_pos;
 }
+
+void Camera::setLookAt(glm::vec3 look)
+{
+	m_lookAt = look;
+}
