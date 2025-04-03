@@ -106,4 +106,5 @@ public:
 	glm::vec3 _pos;
 	void setLookAt(glm::vec3 newLookAt);
 	void move(bool w, bool s, bool a, bool d, float _dt);
+	void breakPoint();
 };

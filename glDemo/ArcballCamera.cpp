@@ -24,8 +24,17 @@ void ArcballCamera::calculateDerivedValues() {
 		
 	// calculate view and projection transform matrices
 	//m_viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0,-m_radius)) * glm::eulerAngleX(-theta_) * glm::eulerAngleY(-phi_);
-	vec3 camPos = glm::vec3(-m_phi, - m_theta, m_radius);// 
+	// 
+	//vec3 camPos = glm::vec3(-m_phi, - m_theta, m_radius);// 
+	
+	//make a free cam using 
+
+	float x = m_radius * sin(m_theta/500) * cos(m_phi/500);
+	float y = m_radius * cos(m_theta/500);
+	float z = m_radius * sin(m_theta/500) * sin(m_phi/500);
+	glm::vec3 camPos = lookAt + glm::vec3(x, y, z);
 	//camPos = camPos * glm::eulerAngleX(-theta_);//*glm::eulerAngleY(-phi_);
+
 
 	m_viewMatrix = glm::lookAt(camPos, lookAt, vec3(0, 1, 0));
 	m_projectionMatrix = glm::perspective(glm::radians<float>(m_fovY), m_aspect, m_nearPlane, m_farPlane);
@@ -33,7 +42,10 @@ void ArcballCamera::calculateDerivedValues() {
 	//add button to make camera look at other gameobjects
 }
 
-
+void ArcballCamera::breakPoint()
+{
+	printf("");
+}
 //
 // Public method implementation
 //
@@ -98,8 +110,18 @@ float ArcballCamera::getPhi() {
 
 void ArcballCamera::rotateCamera(float _dTheta, float _dPhi) {
 
-	m_theta += _dTheta;
+	float temp_theta = m_theta; 
+
+	m_theta += _dTheta; 
 	m_phi += _dPhi;
+
+	//if theta goes behond 0 or Pi*500 then it will revert theta so that it will stop it going directly above or below the object
+	if (m_theta < 1 || m_theta > 1570)
+	{
+		m_theta = temp_theta;
+	}
+
+	
 
 	calculateDerivedValues();
 }

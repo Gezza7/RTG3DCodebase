@@ -66,6 +66,7 @@ void mouseMoveHandler(GLFWwindow* _window, double _xpos, double _ypos);
 void mouseButtonHandler(GLFWwindow* _window, int _button, int _action, int _mods);
 void mouseScrollHandler(GLFWwindow* _window, double _xoffset, double _yoffset);
 void mouseEnterHandler(GLFWwindow* _window, int _entered);
+void breakpoint();
 
 
 int main()
@@ -371,6 +372,7 @@ void keyboardHandler(GLFWwindow* _window, int _key, int _scancode, int _action, 
 			break;
 		case GLFW_KEY_B:
 			printf("");
+			breakpoint();
 			break;
 		case GLFW_KEY_W:
 			g_Scene->camW = true;
@@ -488,4 +490,12 @@ void mouseEnterHandler(GLFWwindow* _window, int _entered)
 {
 }
 
+void breakpoint()
+{
+	ArcballCamera* arcballCam = dynamic_cast<ArcballCamera*>(g_Scene->GetCamera("CAM5"));
+	if (arcballCam)
+	{
+		arcballCam->breakPoint();
+	}
+}
 #pragma endregion
