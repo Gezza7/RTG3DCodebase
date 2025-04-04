@@ -268,21 +268,24 @@ void ArcballCamera::setLookAt(glm::vec3 newLookAt)
 
 void ArcballCamera::move(bool w, bool s, bool a, bool d, float _dt)
 {
-	if (w)
+	if (freecam)
 	{
-		m_pos = glm::vec3(m_pos.x +(1 * (sinf(m_phi) * cosf(-m_theta) * m_radius) *_dt), m_pos.y - (1 * _dt) * sinf(-m_theta)*m_radius, m_pos.z + (1 * _dt)*cosf(m_phi)*cosf(-m_theta)*m_radius);
-	}
-	if (s)
-	{
-		m_pos = glm::vec3(m_pos.x, m_pos.y + (0.1 * _dt) * m_theta, m_pos.z - (10 * _dt));
-	}
-	if (a)
-	{
-		m_pos = glm::vec3(m_pos.x - (10 * _dt), m_pos.y, m_pos.z);
-	}
-	if (d)
-	{
-		m_pos = glm::vec3(m_pos.x + (10 * _dt), m_pos.y, m_pos.z);
+		if (w)
+		{
+			m_pos = glm::vec3(m_pos.x + (1 * (sinf(m_phi) * cosf(-m_theta) * m_radius) * _dt), m_pos.y - (1 * _dt) * sinf(-m_theta) * m_radius, m_pos.z + (1 * _dt) * cosf(m_phi) * cosf(-m_theta) * m_radius);
+		}
+		if (s)
+		{
+			m_pos = glm::vec3(m_pos.x, m_pos.y + (0.1 * _dt) * m_theta, m_pos.z - (10 * _dt));
+		}
+		if (a)
+		{
+			m_pos = glm::vec3(m_pos.x - (10 * _dt), m_pos.y, m_pos.z);
+		}
+		if (d)
+		{
+			m_pos = glm::vec3(m_pos.x + (10 * _dt), m_pos.y, m_pos.z);
+		}
 	}
 
 	//theta is Y 

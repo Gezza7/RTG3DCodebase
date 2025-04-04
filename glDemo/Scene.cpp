@@ -249,6 +249,10 @@ void Scene::Load(ifstream& _file)
 		{
 			abCam->Load(_file); 
 			abCam->loadArcball(_file);
+			if (abCam->GetName() == "CAM6")
+			{
+				abCam->freecam = true;
+			}
 		}
 		else
 		{
