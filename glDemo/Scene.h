@@ -56,6 +56,7 @@ public:
 	bool camA;
 	bool camD;
 	void iterateLookAt();
+	Camera* getUseCamera();
 	
 
 protected:

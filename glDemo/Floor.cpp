@@ -1,9 +1,9 @@
-#include "Cube2.h"
+#include "Floor.h"
 #include "stringHelp.h"
 #include "Scene.h"
 #include "Shader.h"
 #include "Texture.h"
-
+#include "AIModel.h"
 
 using namespace std;
 using namespace glm;
@@ -12,67 +12,7 @@ using namespace glm;
 // Example data for cube model
 
 
-//original
-/*
 
-// Packed vertex buffer for cube
-static float positionArray[] = {
-
-	-1.0f, 1.0f, 1.0f, 1.0f,
-	-1.0f, 1.0f, -1.0f, 1.0f,
-	1.0f, 1.0f, -1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f, 1.0f,
-
-	-1.0f, -1.0f, 1.0f, 1.0f,
-	-1.0f, -1.0f, -1.0f, 1.0f,
-	1.0f, -1.0f, -1.0f, 1.0f,
-	1.0f, -1.0f, 1.0f, 1.0f
-};
-
-// Packed colour buffer for principle axes model
-static float colourArray[] = {
-
-	1.0f, 0.0f, 0.0f, 1.0f,
-	1.0f, 0.0f, 1.0f, 1.0f,
-	0.0f, 1.0f, 0.0f, 1.0f,
-	1.0f, 1.0f, 0.0f, 1.0f,
-
-	0.0f, 0.0f, 1.0f, 1.0f,
-	0.0f, 1.0f, 1.0f, 1.0f,
-	0.0f, 0.0f, 0.0f, 1.0f,
-	0.0f, 0.0f, 0.0f, 1.0f
-};
-
-
-// Line list topology to render principle axes
-static unsigned int indexArray[] = {
-
-	// Top face
-	2, 1, 0,
-	3, 2, 0,
-
-	// Bottom face
-	5, 6, 4,
-	6, 7, 4,
-
-	// Right face
-	3, 7, 2,
-	7, 6, 2,
-
-	// Front face
-	0, 4, 3,
-	4, 7, 3,
-
-	// Left face
-	0, 1, 5,
-	4, 0, 5,
-
-	// Back face
-	2, 6, 1,
-	6, 5, 1
-};
-
-*/
 
 
 
@@ -116,6 +56,47 @@ static float positionArray[] = {
 	 -1.0f, -1.0f,  1.0f, 1.0f,  //22
 	 -1.0f, -1.0f, -1.0f, 1.0f,  //23
 };
+
+static float texCoords[] = {
+	// Back face (Green)
+	 0.0f,  0.0f,  0.0f,  // 4
+	 0.0f,  0.0f,  0.0f,  // 5
+	 0.0f,  0.0f,  0.0f,  // 6
+	 0.0f,  0.0f,  0.0f,  // 7
+
+	// Front face (Red)
+	 0.0f,  0.0f,  0.0f,   // 4
+	 0.0f,  0.0f,  0.0f,   // 5
+	 0.0f,  0.0f,  0.0f,   // 6
+	 0.0f,  0.0f,  0.0f,   // 3
+
+
+
+	// Top face (Blue)
+	 1.0f,  1.0f,  1.0f,  // 8		9, 8, 11, 11, 10, 9, // Top (CCW)
+	 0.5f,  0.5f,  0.5f,  // 9
+	 0.0f,  0.0f,  0.0f,  //10
+	 0.75f,  0.75f,  0.75f,  //11
+
+	// Bottom face (Yellow)
+	0.0f,  0.0f,  0.0f,  // 4
+	 0.0f,  0.0f,  0.0f, // 5
+	 0.0f,  0.0f,  0.0f,  // 6
+	 0.0f,  0.0f,  0.0f,  //15
+
+	// Right face (Cyan)
+	 0.0f,  0.0f,  0.0f,  // 4
+	 0.0f,  0.0f,  0.0f,  // 5
+	 0.0f,  0.0f,  0.0f,  // 6
+	 0.0f,  0.0f,  0.0f,  //19
+
+	 // Left face (Magenta)
+	 0.0f,  0.0f,  0.0f,   // 4
+	 0.0f,  0.0f,  0.0f,  // 5
+	 0.0f,  0.0f,  0.0f,  // 6
+	 0.0f,  0.0f,  0.0f,  //23
+};
+
 
 // Packed colour buffer for principle axes model
 static float colourArray[] = {
@@ -171,7 +152,7 @@ static unsigned int indexArray[] = {
 
 
 
-Cube2::Cube2() {
+Floor::Floor() {
 
 	m_numFaces = 6 * 2;
 
@@ -201,7 +182,7 @@ Cube2::Cube2() {
 }
 
 
-Cube2::~Cube2() {
+Floor::~Floor() {
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -212,13 +193,25 @@ Cube2::~Cube2() {
 }
 
 
-void Cube2::render() {
+void Floor::render() {
+
+	
+	glEnable(GL_TEXTURE_2D);
+	glTexCoordPointer(3, GL_FLOAT, 0, texCoords);
+
+	glBindTexture(GL_TEXTURE_2D, m_texture);
 
 	glBindVertexArray(m_vao);
 	glDrawElements(GL_TRIANGLES, m_numFaces * 3, GL_UNSIGNED_INT, (const GLvoid*)0);
+	glDisable(GL_TEXTURE_2D);
+	
+
+	//glBindVertexArray(m_vao);
+	//glDrawElements(GL_TRIANGLES, m_numFaces * 3, GL_UNSIGNED_INT, (const GLvoid*)0);
+
 }
 
-void Cube2::Load(ifstream& _file)
+void Floor::Load(ifstream& _file)
 {
 	GameObject::Load(_file);
 	StringHelp::String(_file, "MODEL", m_ModelName);
@@ -227,13 +220,13 @@ void Cube2::Load(ifstream& _file)
 
 }
 
-void Cube2::tick(float _dt)
+void Floor::tick(float _dt)
 {
 	GameObject::Tick(_dt);
 }
 
 
-void Cube2::preRender()
+void Floor::preRender()
 {
 	GameObject::PreRender();
 	glEnable(GL_TEXTURE_2D);
@@ -243,9 +236,9 @@ void Cube2::preRender()
 }
 
 
-void Cube2::Init(Scene* _scene)
+void Floor::Init(Scene* _scene)
 {
 	m_ShaderProg = _scene->GetShader(m_ShaderName)->GetProg();
 	m_texture = _scene->GetTexture(m_TexName)->GetTexID();
-	
+	//m_model = _scene->GetModel(m_ModelName);
 }

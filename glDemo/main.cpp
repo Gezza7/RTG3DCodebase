@@ -433,7 +433,7 @@ void mouseMoveHandler(GLFWwindow* _window, double _xpos, double _ypos)
 
 		
 		 //also moves the arcballCamera in scene
-		ArcballCamera* arcballCam = dynamic_cast<ArcballCamera*>(g_Scene->GetCamera("CAM5")); 
+		ArcballCamera* arcballCam = dynamic_cast<ArcballCamera*>(g_Scene->getUseCamera()); 
 		if (arcballCam)
 		{
 			float dx = float(_xpos - g_prevMouseX);// *360.0f * tDelta;
@@ -476,7 +476,7 @@ void mouseScrollHandler(GLFWwindow* _window, double _xoffset, double _yoffset) {
 			g_mainCamera->scaleRadius(0.9f);
 	}
 	
-	ArcballCamera* arcballCam = dynamic_cast<ArcballCamera*>(g_Scene->GetCamera("CAM5"));
+	ArcballCamera* arcballCam = dynamic_cast<ArcballCamera*>(g_Scene->getUseCamera());
 	if (arcballCam)
 	{
 		if (_yoffset < 0.0)
@@ -492,7 +492,7 @@ void mouseEnterHandler(GLFWwindow* _window, int _entered)
 
 void breakpoint()
 {
-	ArcballCamera* arcballCam = dynamic_cast<ArcballCamera*>(g_Scene->GetCamera("CAM5"));
+	ArcballCamera* arcballCam = dynamic_cast<ArcballCamera*>(g_Scene->getUseCamera());
 	if (arcballCam)
 	{
 		arcballCam->breakPoint();

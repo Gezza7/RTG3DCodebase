@@ -270,21 +270,23 @@ void ArcballCamera::move(bool w, bool s, bool a, bool d, float _dt)
 {
 	if (freecam)
 	{
+		glm::vec3 folward = { m_radius *sin(m_theta / 500) * cos(m_phi / 500), m_radius *cos(m_theta / 500), m_radius* sin(m_theta / 500) * cos(m_phi / 500) };
+		glm::vec3 right = glm::normalize(glm::cross(folward, glm::vec3(0.0f, 1.0f, 0.0f)));
 		if (w)
 		{
-			m_pos = glm::vec3(m_pos.x + (1 * (sinf(m_phi) * cosf(-m_theta) * m_radius) * _dt), m_pos.y - (1 * _dt) * sinf(-m_theta) * m_radius, m_pos.z + (1 * _dt) * cosf(m_phi) * cosf(-m_theta) * m_radius);
+			m_pos = (m_pos + folward * movementSpeed);
 		}
 		if (s)
 		{
-			m_pos = glm::vec3(m_pos.x, m_pos.y + (0.1 * _dt) * m_theta, m_pos.z - (10 * _dt));
+			m_pos = (m_pos - folward * movementSpeed);
 		}
 		if (a)
 		{
-			m_pos = glm::vec3(m_pos.x - (10 * _dt), m_pos.y, m_pos.z);
+			m_pos = (m_pos - right * movementSpeed);
 		}
 		if (d)
 		{
-			m_pos = glm::vec3(m_pos.x + (10 * _dt), m_pos.y, m_pos.z);
+			m_pos = (m_pos + right * movementSpeed); 
 		}
 	}
 

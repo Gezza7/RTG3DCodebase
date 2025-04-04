@@ -3,6 +3,7 @@
 #include "ExampleGO.h"
 #include <assert.h>
 #include "Cube2.h"
+#include "Floor.h"
 
 using std::string;
 
@@ -20,6 +21,10 @@ GameObject* GameObjectFactory::makeNewGO(string _type)
 	else if (_type == "CUBE")
 	{
 		return new Cube2();
+	}
+	else if (_type == "FLOOR")
+	{
+		return new Floor();
 	}
 	
 	else

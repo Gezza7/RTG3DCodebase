@@ -40,6 +40,7 @@ private:
 	// update position, orientation, view and projection matrices when camera rotation and radius are modified
 	void calculateDerivedValues();
 	glm::vec3 lookAt;
+	float movementSpeed = 0.001f;
 	
 
 public:  

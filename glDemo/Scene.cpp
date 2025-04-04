@@ -12,6 +12,7 @@
 #include "GameObjectFactory.h"
 #include <assert.h>
 #include "Cube2.h"
+#include "Floor.h"
 
 Scene::Scene()
 {
@@ -203,13 +204,21 @@ void Scene::Render()
 			}
 			else
 			{
+				Floor* floor = dynamic_cast<Floor*>(*it);
+				if (floor)
+				{
+					floor->preRender();
+					floor->render();
+				}
+				else
+				{
 
-				//set any uniform shader values for the actual model
-				(*it)->PreRender();
-				//actually render the GameObject
-				(*it)->Render();
+					//set any uniform shader values for the actual model
+					(*it)->PreRender();
+					//actually render the GameObject
+					(*it)->Render();
+				}
 			}
-			
 			
 		}
 	}
@@ -499,3 +508,9 @@ void Scene::iterateLookAt()
 	}
 
 }
+
+Camera* Scene::getUseCamera()
+{
+	return m_useCamera;
+}
+
