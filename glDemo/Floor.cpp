@@ -196,11 +196,14 @@ Floor::~Floor() {
 void Floor::render() {
 
 	
+
+
 	glEnable(GL_TEXTURE_2D);
 	glTexCoordPointer(3, GL_FLOAT, 0, texCoords);
 
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 
+	
 	glBindVertexArray(m_vao);
 	glDrawElements(GL_TRIANGLES, m_numFaces * 3, GL_UNSIGNED_INT, (const GLvoid*)0);
 	glDisable(GL_TEXTURE_2D);

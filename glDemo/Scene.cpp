@@ -212,11 +212,27 @@ void Scene::Render()
 				}
 				else
 				{
-
-					//set any uniform shader values for the actual model
-					(*it)->PreRender();
-					//actually render the GameObject
-					(*it)->Render();
+					if ((*it)->GetName() == "TRANS")
+					{
+						glEnable(GL_BLEND); 
+						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+						glDepthMask(GL_FALSE); 
+						//set any uniform shader values for the actual model
+						(*it)->PreRender(); 
+						//actually render the GameObject
+						(*it)->Render(); 
+						glDisable(GL_BLEND);
+						glDepthMask(GL_TRUE); 
+					}
+					else 
+					{
+						//set any uniform shader values for the actual model
+						(*it)->PreRender();
+						//actually render the GameObject
+						(*it)->Render();
+					}
+					
+					
 				}
 			}
 			

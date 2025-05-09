@@ -150,11 +150,22 @@ VERTFILE: Assets\\Shaders\\texture-directional.vert
 FRAGFILE: Assets\\Shaders\\texture-directional.frag
 }
 
-GAMEOBJECTS 4
+GAMEOBJECTS 5
 {
 TYPE: EXAMPLE
 NAME: BEAST
 POS: 0.0 0.0 0.0
+ROT: 0.0 0.0 0.0
+SCALE: 1.0 1.0 1.0
+ROTINC: 0.0 0.1 0.00
+MODEL: BEAST
+TEXTURE: BEAST
+SHADER: TEXDIR
+}
+{
+TYPE: EXAMPLE
+NAME: TRANS
+POS: 1.0 0.0 1.0
 ROT: 0.0 0.0 0.0
 SCALE: 1.0 1.0 1.0
 ROTINC: 0.0 0.1 0.00
