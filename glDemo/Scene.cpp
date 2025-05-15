@@ -40,13 +40,20 @@ void Scene::Update(float _dt)
 		ArcballCamera* arcball = dynamic_cast<ArcballCamera*>(*it);
 		if (arcball)
 		{
-			arcball->move(camW, camS, camA, camD, _dt);
+			if (arcball->freecam)
+			{
+				arcball->moveFree( _dt);
+			}
+			else if (arcball->isometric)
+			{
+				arcball->moveIso( _dt);
+			}
+			else if (arcball->topdown)
+			{
+				arcball->moveTop(_dt);
+			}
+			arcball->calculateDerivedValues();
 		}
-		else
-		{
-			(*it)->move(camW, camS, camA, camD, _dt); 
-		}
-		
 	}
 
 	//update all GameObjects
@@ -185,7 +192,7 @@ void Scene::Render()
 				if ((*it)->GetName() == "BEAST")
 				{
 					//arcballCam->_beastPos = (*it)->getPos();
-					arcballCam->_pos = m_useCamera->GetPos();
+					arcballCam->arcPos = m_useCamera->GetPos();
 				}
 				arcballCam->setRenderValuesArcballCamera(SP);
 			}
@@ -214,15 +221,17 @@ void Scene::Render()
 				{
 					if ((*it)->GetName() == "TRANS")
 					{
+						/*
 						glEnable(GL_BLEND); 
 						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
-						glDepthMask(GL_FALSE); 
+						 
 						//set any uniform shader values for the actual model
 						(*it)->PreRender(); 
 						//actually render the GameObject
 						(*it)->Render(); 
 						glDisable(GL_BLEND);
-						glDepthMask(GL_TRUE); 
+						*/
+						
 					}
 					else 
 					{
@@ -240,6 +249,39 @@ void Scene::Render()
 	}
 	//s_cube->render();
 	//TODO: now do the same for RP_TRANSPARENT here
+
+	for (list<GameObject*>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
+	{
+		if ((*it)->GetRP() & RP_TRANSPARENT)// TODO: note the bit-wise operation. Why?
+		{
+			//set shader program using
+			GLuint SP = (*it)->GetShaderProg();
+			glUseProgram(SP);
+				
+			ArcballCamera* arcballCam = dynamic_cast<ArcballCamera*>(m_useCamera);
+			if (arcballCam == nullptr)
+			{
+				m_useCamera->SetRenderValues(SP);
+			}
+			else
+			{
+				arcballCam->setRenderValuesArcballCamera(SP);
+			}
+			SetShaderUniforms(SP);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			//set any uniform shader values for the actual model
+			(*it)->PreRender();
+			//actually render the GameObject
+			(*it)->Render();
+			glDisable(GL_BLEND);
+
+					
+		}
+
+	}
+
 }
 
 void Scene::SetShaderUniforms(GLuint _shaderprog)
@@ -274,9 +316,17 @@ void Scene::Load(ifstream& _file)
 		{
 			abCam->Load(_file); 
 			abCam->loadArcball(_file);
-			if (abCam->GetName() == "CAM6")
+			if (newCam->GetName() == "FREE" || i == 1)
 			{
 				abCam->freecam = true;
+			}
+			else if (newCam->GetName() == "ISOMETRIC" || i ==2)
+			{
+				abCam->isometric = true;
+			}
+			else if (newCam->GetName() == "TOP")
+			{
+				abCam->topdown = true;
 			}
 		}
 		else
@@ -390,6 +440,11 @@ void Scene::Load(ifstream& _file)
 		GameObject* newGO = GameObjectFactory::makeNewGO(type);
 		newGO->Load(_file);
 
+		if (newGO->GetName() == "TRANS")
+		{
+			newGO->setRP(RP_TRANSPARENT);
+		}
+
 		m_GameObjects.push_back(newGO);
 
 		//skip }
@@ -451,7 +506,7 @@ void Scene::Init()
 	}
 
 
-	camW, camS, camA, camD = false;
+	
 }
 
 
@@ -492,6 +547,14 @@ void Scene::itterateCamera()
 		if (m_useCameraIndex == count)
 		{
 			m_useCamera = *it;
+			ArcballCamera* arcballCam = dynamic_cast<ArcballCamera*>(*it);
+			if (arcballCam)
+			{
+				arcballCam->camW = false;
+				arcballCam->camS = false;
+				arcballCam->camA = false;
+				arcballCam->camD = false;
+			}
 			printf("Current use camera : camera %d\n", m_useCameraIndex);
 		}
 		count++;
@@ -515,7 +578,6 @@ void Scene::iterateLookAt()
 			{
 				arcball->setLookAt((*it)->getPos());
 				printf("looking at GameObject %d\n", m_lookAtIndex);
-
 
 			}
 			

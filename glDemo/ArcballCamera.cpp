@@ -33,10 +33,23 @@ void ArcballCamera::calculateDerivedValues() {
 	float y = m_radius * cos(m_theta/500);
 	float z = m_radius * sin(m_theta/500) * sin(m_phi/500);
 	glm::vec3 camPos = lookAt + glm::vec3(x, y, z);
+	m_viewMatrix = glm::lookAt(camPos + movePos, lookAt, vec3(0, 1, 0));
 	//camPos = camPos * glm::eulerAngleX(-theta_);//*glm::eulerAngleY(-phi_);
+	if (isometric)
+	{
+		camPos = lookAt + glm::vec3((m_radius * 5.0f) , (m_radius * 5.0f) , (m_radius * 5.0f) );
+		lookAt = (camPos +movePos) - glm::vec3((m_radius * 5.0f), (m_radius * 5.0f), (m_radius * 5.0f));
+		m_viewMatrix = glm::lookAt(camPos + movePos, lookAt, vec3(0, 1, 0));
+	}
+	else if (topdown)
+	{
+		camPos += movePos;
+		lookAt += movePos;
+		m_viewMatrix = glm::lookAt(camPos, lookAt, vec3(0, 1, 0));
+	}
+	
 
-
-	m_viewMatrix = glm::lookAt(camPos, lookAt, vec3(0, 1, 0));
+	
 	m_projectionMatrix = glm::perspective(glm::radians<float>(m_fovY), m_aspect, m_nearPlane, m_farPlane);
 	//theta and phi used to rotate camera and calculate the viewmatrix use these to change the camera position as well so it will move based on where it is looking not the cardinal axies
 	//add button to make camera look at other gameobjects
@@ -205,6 +218,7 @@ void ArcballCamera::loadArcball(ifstream& _file)
 	StringHelp::Float(_file, "PHI", m_phi);
 	StringHelp::Float(_file, "RADIUS", m_radius);
 	m_aspect = 1.0f;
+	movePos = { 0,0,0 };
 	calculateDerivedValues();
 }
 
@@ -212,7 +226,7 @@ void ArcballCamera::setRenderValuesArcballCamera(unsigned int _prog)
 {
 	
 	
-	mat4 cameraView = m_viewMatrix * translate(identity<mat4>(), _pos); 
+	mat4 cameraView = m_viewMatrix * translate(identity<mat4>(), arcPos); 
 	
 	GLint loc;
 	//matrix for the view transform
@@ -266,34 +280,99 @@ void ArcballCamera::setLookAt(glm::vec3 newLookAt)
 	//m_phi = m_phi;
 }
 
-void ArcballCamera::move(bool w, bool s, bool a, bool d, float _dt)
+void ArcballCamera::moveFree(float _dt)
 {
 	if (freecam)
 	{
 		glm::vec3 folward = { m_radius *sin(m_theta / 500) * cos(m_phi / 500), m_radius *cos(m_theta / 500), m_radius* sin(m_theta / 500) * cos(m_phi / 500) };
 		glm::vec3 right = glm::normalize(glm::cross(folward, glm::vec3(0.0f, 1.0f, 0.0f)));
-		if (w)
+		if (camW)
 		{
-			m_pos = (m_pos + folward * movementSpeed);
+			movePos = (m_pos + folward * movementSpeed);
 		}
-		if (s)
+		if (camS)
 		{
-			m_pos = (m_pos - folward * movementSpeed);
+			movePos = (m_pos - folward * movementSpeed);
 		}
-		if (a)
+		if (camA)
 		{
-			m_pos = (m_pos - right * movementSpeed);
+			movePos = (m_pos - right * movementSpeed);
 		}
-		if (d)
+		if (camD)
 		{
-			m_pos = (m_pos + right * movementSpeed); 
+			movePos = (m_pos + right * movementSpeed);
 		}
 	}
+	
 
 	//theta is Y 
 	//phi is X
 }
 
+void ArcballCamera::moveIso(float _dt)
+{
+	
+	movementSpeed = 0.1;
+	if (camW)
+	{
+		movePos.z -= 0.71 * movementSpeed * _dt;
+	}
+	if (camS)
+	{
+		movePos.z += 0.71 * movementSpeed * _dt;
+	}
+	if (!camW && !camS)
+	{
+		movePos.z = 0;
+	}
+	if (camA)
+	{
+		movePos.x -= 0.71 * movementSpeed * _dt;
+	}
+	if (camD)
+	{
+		movePos.x += 0.71 * movementSpeed * _dt;
+	}
+	if (!camA && !camD)
+	{
+		movePos.x = 0;
+	}
+}
+
+void ArcballCamera::moveTop(float _dt)
+{
+
+	movementSpeed = 0.1;
+	if (camW)
+	{
+		movePos.x -= 1 * movementSpeed * _dt;
+	}
+	if (camS)
+	{
+		movePos.x += 1 * movementSpeed * _dt;
+	}
+	if (!camW && !camS)
+	{
+		movePos.x = 0;
+	}
+	if (camA)
+	{
+		movePos.z += 1 * movementSpeed * _dt;
+	}
+	if (camD)
+	{
+		movePos.z -= 1 * movementSpeed * _dt;
+	}
+	if (!camA && !camD)
+	{
+		movePos.z = 0;
+	}
+}
+
+bool ArcballCamera::getFreecam()
+{
+	return freecam;
+}
 
 
 #pragma endregion

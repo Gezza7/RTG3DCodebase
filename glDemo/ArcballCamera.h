@@ -38,7 +38,7 @@ private:
 	//
 
 	// update position, orientation, view and projection matrices when camera rotation and radius are modified
-	void calculateDerivedValues();
+	
 	glm::vec3 lookAt;
 	float movementSpeed = 0.001f;
 	
@@ -52,7 +52,7 @@ public:
 	ArcballCamera(float _theta, float _phi, float _radius, float _fovy, float _aspect, float _nearPlane, float _farPlane);
 	// create a camera with orientation <theta, phi> representing Euler angles specified in degrees and Euclidean distance 'init_radius' from the origin.  The frustum / viewplane projection coefficients are defined in init_fovy, specified in degrees spanning the entire vertical field of view angle, init_aspect (w/h ratio), init_nearPlane and init_farPlane.  If init_farPlane = 0.0 (as determined by equalf) then the resulting frustum represents an infinite perspective projection.  This is the default
 
-
+	void calculateDerivedValues();
 	// Accessor methods for stored properties
 
 	// return the pivot rotation around the x axis (theta) in degrees
@@ -104,9 +104,21 @@ public:
 
 	glm::mat4 projectionTransform(); // return a const reference the projection transform for the camera.  This is a pass-through method and calls projectionMatrix on the encapsulated ViewFrustum
 	glm::vec3 _beastPos;
-	glm::vec3 _pos;
+	glm::vec3 arcPos;
+	glm::vec3 movePos;
+	glm::vec3 currentPos;
 	void setLookAt(glm::vec3 newLookAt);
-	void move(bool w, bool s, bool a, bool d, float _dt);
+	void moveFree(float _dt);
+	void moveIso(float _dt);
+	void moveTop(float _dt);
 	void breakPoint();
-	bool freecam = false;
+	bool freecam = false; 
+	bool isometric = false;  
+	bool getFreecam();
+	bool topdown = false;
+
+	bool camW;
+	bool camS;
+	bool camA;
+	bool camD;
 };

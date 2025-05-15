@@ -63,7 +63,6 @@ public:
 	void setAspectRatio(float m_newAspectRatio); 
 
 	glm::vec3 getPos();
-	void move(bool w, bool s, bool a, bool d, float _dt);
 	void setLookAt(glm::vec3 look);
 	glm::vec3 getLookAt();
 

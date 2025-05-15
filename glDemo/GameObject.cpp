@@ -57,3 +57,7 @@ vec3 GameObject::getPos()
 {
 	return m_pos;
 }
+void GameObject::setRP(RenderPass rp)
+{
+	m_RP = rp;
+}

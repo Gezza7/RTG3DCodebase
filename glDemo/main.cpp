@@ -355,7 +355,7 @@ void resizeWindow(GLFWwindow* _window, int _width, int _height)
 void keyboardHandler(GLFWwindow* _window, int _key, int _scancode, int _action, int _mods)
 {
 	if (_action == GLFW_PRESS) {
-
+		ArcballCamera* arcballCam = dynamic_cast<ArcballCamera*>(g_Scene->getUseCamera()); 
 		// check which key was pressed...
 		switch (_key)
 		{
@@ -375,16 +375,16 @@ void keyboardHandler(GLFWwindow* _window, int _key, int _scancode, int _action, 
 			breakpoint();
 			break;
 		case GLFW_KEY_W:
-			g_Scene->camW = true;
+			if (arcballCam) arcballCam->camW = true;
 			break;
 		case GLFW_KEY_S:
-			g_Scene->camS = true;
+			if (arcballCam) arcballCam->camS = true;
 			break;
 		case GLFW_KEY_A:
-			g_Scene->camA = true;
+			if (arcballCam) arcballCam->camA = true;
 			break;
 		case GLFW_KEY_D:
-			g_Scene->camD = true;
+			if (arcballCam) arcballCam->camD = true;
 			break;
 		case GLFW_KEY_Q:
 			g_Scene->iterateLookAt();
@@ -396,20 +396,21 @@ void keyboardHandler(GLFWwindow* _window, int _key, int _scancode, int _action, 
 	}
 	else if (_action == GLFW_RELEASE) 
 	{
+		ArcballCamera* arcballCam = dynamic_cast<ArcballCamera*>(g_Scene->getUseCamera()); 
 		// handle key release events
 		switch (_key)
 		{
-		case GLFW_KEY_W: 
-			g_Scene->camW = false;
+		case GLFW_KEY_W:
+			if (arcballCam) arcballCam->camW = false;
 			break;
 		case GLFW_KEY_S:
-			g_Scene->camS = false;
+			if (arcballCam) arcballCam->camS = false;
 			break;
 		case GLFW_KEY_A:
-			g_Scene->camA = false;
+			if (arcballCam) arcballCam->camA = false;
 			break;
 		case GLFW_KEY_D:
-			g_Scene->camD = false;
+			if (arcballCam) arcballCam->camD = false;
 			break;
 		default:
 		{
@@ -434,7 +435,7 @@ void mouseMoveHandler(GLFWwindow* _window, double _xpos, double _ypos)
 		
 		 //also moves the arcballCamera in scene
 		ArcballCamera* arcballCam = dynamic_cast<ArcballCamera*>(g_Scene->getUseCamera()); 
-		if (arcballCam)
+		if (arcballCam && !(arcballCam->isometric) && !(arcballCam->topdown))
 		{
 			float dx = float(_xpos - g_prevMouseX);// *360.0f * tDelta;
 			float dy = float(_ypos - g_prevMouseY);// *360.0f * tDelta;

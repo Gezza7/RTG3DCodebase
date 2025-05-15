@@ -38,6 +38,7 @@ public:
 	RenderPass GetRP() { return m_RP; }
 
 	vec3 getPos();
+	void setRP(RenderPass rp);
 
 protected:
 

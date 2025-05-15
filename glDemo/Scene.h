@@ -51,10 +51,6 @@ public:
 	float m_aspectRatio;
 
 	void itterateCamera();
-	bool camW;
-	bool camS;
-	bool camA;
-	bool camD;
 	void iterateLookAt();
 	Camera* getUseCamera();
 	
